@@ -341,37 +341,37 @@ const FabricEditor = () => {
   const shapes = [
     {
       id: 1,
-      src: "/src/assets/rectangle-wide-svgrepo-com.svg",
+      src: "/public/rectangle-wide-svgrepo-com.svg",
       name: "Rectangle",
       onclick: addRectangle,
     },
     {
       id: 2,
-      src: "/src/assets/circle-svgrepo-com.svg",
+      src: "/public/circle-svgrepo-com.svg",
       name: "Circle",
       onclick: addCircle,
     },
     {
       id: 3,
-      src: "/src/assets/triangle-svgrepo-com.svg",
+      src: "/public/triangle-svgrepo-com.svg",
       name: "Triangle",
       onclick: addTriangle,
     },
     {
       id: 4,
-      src: "/src/assets/star-svgrepo-com.svg",
+      src: "/public/star-svgrepo-com.svg",
       name: "Star",
       onclick: addStar,
     },
     {
       id: 5,
-      src: "/src/assets/ellipse-svgrepo-com.svg",
+      src: "/public/ellipse-svgrepo-com.svg",
       name: "Ellipse",
       onclick: addEllipse,
     },
     {
       id: 6,
-      src: "/src/assets/line-svgrepo-com.svg",
+      src: "/public/line-svgrepo-com.svg",
       name: "Line",
       onclick: addLine,
     },
