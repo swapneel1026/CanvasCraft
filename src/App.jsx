@@ -391,14 +391,14 @@ const FabricEditor = () => {
     }
   };
   return (
-    <div className="w-full min-h-screen px-10 py-6 bg-slate-200 ">
+    <div className="w-full h-screen px-10 py-6 overflow-y-auto bg-slate-200 scrollbar scrollbar-thumb-violet-500 scrollbar-track-gray-100">
       {/* Main Control Panel*/}
       <section className="flex justify-end w-full ">
         <MainControlPanel saveAsPDF={saveAsPDF} cleanAll={clearCanvas} />
       </section>
       <div className="grid w-full grid-cols-5 mt-2 ">
         {/* Left side control boxes */}
-        <section className=" col-span-1 text-center  p-2  place-items-center   space-y-4 overflow-y-auto h-[calc(100vh-4rem)] scrollbar-hide py-4 ">
+        <section className=" col-span-1 text-center  p-2  place-items-center  space-y-4 overflow-y-auto h-[calc(100vh-4rem)]  py-4 scrollbar-hide ">
           <Options
             key={reRenderCount}
             deleteAction={deleteSelectedObject}
