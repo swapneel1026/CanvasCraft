@@ -104,6 +104,28 @@ const FabricEditor = () => {
     canvas.renderAll();
     setProperties((prev) => ({ ...prev, [key]: value }));
   };
+  const saveJSON = () => {
+    const json = canvas.toJSON();
+    const bgColor = canvas.backgroundColor;
+    localStorage.setItem("bgColor", JSON.stringify(bgColor));
+    localStorage.setItem("temp", JSON.stringify(json));
+  };
+  const loadFromJSON = async () => {
+    const temp = JSON.parse(localStorage.getItem("temp"));
+    const bgColor = JSON.parse(localStorage.getItem("bgColor"));
+    if (temp && canvas) {
+      try {
+        await canvas.loadFromJSON(temp);
+        if (canvas) {
+          console.log("Background color set to:", bgColor);
+          canvas.backgroundColor = bgColor;
+          canvas.requestRenderAll();
+        }
+      } catch (error) {
+        console.error(" Error loading JSON:", error);
+      }
+    }
+  };
 
   const addText = (inputText) => {
     const text = new fabric.FabricText(inputText, {
@@ -394,7 +416,12 @@ const FabricEditor = () => {
     <div className="w-full h-screen px-10 py-6 overflow-y-auto bg-slate-200 scrollbar scrollbar-thumb-violet-500 scrollbar-track-gray-100">
       {/* Main Control Panel*/}
       <section className="flex justify-end w-full ">
-        <MainControlPanel saveAsPDF={saveAsPDF} cleanAll={clearCanvas} />
+        <MainControlPanel
+          saveAsPDF={saveAsPDF}
+          cleanAll={clearCanvas}
+          loadFromJSON={loadFromJSON}
+          saveJSON={saveJSON}
+        />
       </section>
       <div className="grid w-full grid-cols-5 mt-2 ">
         {/* Left side control boxes */}
