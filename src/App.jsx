@@ -3,6 +3,7 @@ import * as fabric from "fabric";
 import jsPDF from "jspdf";
 import QRCode from "qrcode";
 import { useEffect, useRef, useState } from "react";
+import { isMobile } from "react-device-detect";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import BackgroundImageColor from "./components/canvasControls/backgroundImageColor";
@@ -14,6 +15,7 @@ import AddShapesControl from "./components/subControls/addShapesControl";
 import AddText from "./components/subControls/AddTextControl";
 import SizeControl from "./components/subControls/sizeControl";
 import UploadImageControl from "./components/subControls/uploadImageControl";
+import MobileErrorPage from "./MobileErrorPage";
 
 const FabricEditor = () => {
   const canvasRef = useRef(null);
@@ -24,6 +26,18 @@ const FabricEditor = () => {
   const [reRenderCount, setReRenderCount] = useState(0);
   const [qrBackgroundColor, setQrBackgroundColor] = useState("#ffffff");
   const [qrForegroundColor, setQrForegroundColor] = useState("#000000");
+  const [mobileError, setMobileError] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setMobileError(isMobile || window.innerWidth < 1024);
+    };
+
+    checkMobile();
+
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
   useEffect(() => {
     const fabricCanvas = new fabric.Canvas(canvasRef.current, {
       width: 600,
@@ -416,62 +430,68 @@ const FabricEditor = () => {
     }
   };
   return (
-    <div className="w-full h-screen px-10 py-6 overflow-y-auto bg-slate-200 scrollbar scrollbar-thumb-violet-500 scrollbar-track-gray-100">
-      {/* Main Control Panel*/}
-      <section className="flex justify-end w-full ">
-        <MainControlPanel
-          saveAsPDF={saveAsPDF}
-          cleanAll={clearCanvas}
-          loadFromJSON={loadFromJSON}
-          saveJSON={saveJSON}
-        />
-      </section>
-      <div className="grid w-full grid-cols-5 mt-2 ">
-        {/* Left side control boxes */}
-        <section className=" col-span-1 text-center  p-2  place-items-center  space-y-4 overflow-y-auto h-[calc(100vh-4rem)]  py-4 scrollbar-hide ">
-          <Options
-            key={reRenderCount}
-            deleteAction={deleteSelectedObject}
-            duplicateAction={() => {}}
-            redo={redo}
-            history={history}
-            undo={undo}
-            selectedObject={selectedObject}
-          />
-          <SizeControl canvas={canvas} />
-          <BackgroundImageColor canvas={canvas} addBgImage={addBgImage} />
-          <UploadImageControl addImage={addImage} />
-        </section>
-        {/* Canvas Area */}
-        <section className="w-full h-full col-span-3 p-2 text-center place-items-center place-content-center ">
-          <div className="flex items-center justify-center bg-transparent shadow-xl h-fit w-fit drop-shadow-xl">
-            <canvas ref={canvasRef} className="" />
-          </div>
-        </section>
-        {/* Right side control boxes */}
-        <section className=" col-span-1 text-center p-2 place-items-center place-content-start   space-y-4 overflow-y-auto h-[calc(100vh-6rem)] scrollbar-hide py-4 ">
-          {selectedObject ? (
-            <>
-              <PropertiesToolbar
-                canvas={canvas}
-                handlePropertyChange={handlePropertyChange}
+    <>
+      {mobileError ? (
+        <MobileErrorPage />
+      ) : (
+        <div className="w-full h-screen px-10 py-6 overflow-y-auto bg-slate-200 scrollbar scrollbar-thumb-violet-500 scrollbar-track-gray-100">
+          {/* Main Control Panel*/}
+          <section className="flex justify-end w-full ">
+            <MainControlPanel
+              saveAsPDF={saveAsPDF}
+              cleanAll={clearCanvas}
+              loadFromJSON={loadFromJSON}
+              saveJSON={saveJSON}
+            />
+          </section>
+          <div className="grid w-full grid-cols-5 mt-2 ">
+            {/* Left side control boxes */}
+            <section className=" col-span-1 text-center  p-2  place-items-center  space-y-4 overflow-y-auto h-[calc(100vh-4rem)]  py-4 scrollbar-hide ">
+              <Options
+                key={reRenderCount}
+                deleteAction={deleteSelectedObject}
+                duplicateAction={() => {}}
+                redo={redo}
+                history={history}
+                undo={undo}
                 selectedObject={selectedObject}
-                properties={properties}
               />
-            </>
-          ) : null}
-          <AddText addText={addText} addTextBox={addTextBox} />
-          <AddShapesControl shapes={shapes} />
-          <AddQRButton
-            addQR={addQR}
-            setQrBackgroundColor={setQrBackgroundColor}
-            setQrForegroundColor={setQrForegroundColor}
-            qrBackgroundColor={qrBackgroundColor}
-            qrForegroundColor={qrForegroundColor}
-          />
-        </section>
-      </div>
-    </div>
+              <SizeControl canvas={canvas} />
+              <BackgroundImageColor canvas={canvas} addBgImage={addBgImage} />
+              <UploadImageControl addImage={addImage} />
+            </section>
+            {/* Canvas Area */}
+            <section className="w-full h-full col-span-3 p-2 text-center place-items-center place-content-center ">
+              <div className="flex items-center justify-center bg-transparent shadow-xl h-fit w-fit drop-shadow-xl">
+                <canvas ref={canvasRef} className="" />
+              </div>
+            </section>
+            {/* Right side control boxes */}
+            <section className=" col-span-1 text-center p-2 place-items-center place-content-start   space-y-4 overflow-y-auto h-[calc(100vh-6rem)] scrollbar-hide py-4 ">
+              {selectedObject ? (
+                <>
+                  <PropertiesToolbar
+                    canvas={canvas}
+                    handlePropertyChange={handlePropertyChange}
+                    selectedObject={selectedObject}
+                    properties={properties}
+                  />
+                </>
+              ) : null}
+              <AddText addText={addText} addTextBox={addTextBox} />
+              <AddShapesControl shapes={shapes} />
+              <AddQRButton
+                addQR={addQR}
+                setQrBackgroundColor={setQrBackgroundColor}
+                setQrForegroundColor={setQrForegroundColor}
+                qrBackgroundColor={qrBackgroundColor}
+                qrForegroundColor={qrForegroundColor}
+              />
+            </section>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
