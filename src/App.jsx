@@ -3,6 +3,7 @@ import * as fabric from "fabric";
 import jsPDF from "jspdf";
 import QRCode from "qrcode";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import BackgroundImageColor from "./components/canvasControls/backgroundImageColor";
 import Options from "./components/canvasControls/Options";
@@ -109,6 +110,7 @@ const FabricEditor = () => {
     const bgColor = canvas.backgroundColor;
     localStorage.setItem("bgColor", JSON.stringify(bgColor));
     localStorage.setItem("temp", JSON.stringify(json));
+    toast(" Successfully saved!");
   };
   const loadFromJSON = async () => {
     const temp = JSON.parse(localStorage.getItem("temp"));
@@ -121,8 +123,9 @@ const FabricEditor = () => {
           canvas.backgroundColor = bgColor;
           canvas.requestRenderAll();
         }
+        toast(" Successfully loaded!");
       } catch (error) {
-        console.error(" Error loading JSON:", error);
+        toast(" Error loading JSON:", error);
       }
     }
   };
