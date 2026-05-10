@@ -436,6 +436,7 @@ const FabricEditor = () => {
       ) : (
         <div className="w-full h-screen px-10 py-6 overflow-y-auto bg-slate-200 scrollbar scrollbar-thumb-violet-500 scrollbar-track-gray-100">
           {/* Main Control Panel*/}
+          <h1>Printer APP swapneel</h1>
           <section className="flex justify-end w-full ">
             <MainControlPanel
               saveAsPDF={saveAsPDF}
